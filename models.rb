@@ -1,0 +1,8 @@
+require_relative 'models/game'
+require_relative 'models/genre'
+require_relative 'models/level_group'
+require_relative 'models/level'
+require_relative 'models/news'
+require_relative 'models/platform'
+require_relative 'models/record'
+require_relative 'models/user'

@@ -1,0 +1,26 @@
+digraph graphname {
+  cyberscore -> boards;
+  cyberscore -> stats;
+  cyberscore -> games;
+  cyberscore -> users;
+
+  games -> game -> groups;
+           game -> charts;
+
+  groups -> group -> charts;
+  charts -> chart -> subs;
+  subs   -> sub   -> user;
+
+  users -> user -> subs;
+           user -> games;
+
+  game  -> game;
+  chart -> chart;
+  user  -> user;
+  group -> group;
+  sub   -> sub;
+
+  { rank=same; cyberscore stats boards }
+  { rank=same; games groups users }
+  { rank=same; game  group  user  }
+}
