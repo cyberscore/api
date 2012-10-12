@@ -16,3 +16,11 @@ tmp
 .yardoc
 _yardoc
 doc/
+
+# pow config files
+tmp
+.powenv
+.powrc
+
+# OS X
+.DS_Store
