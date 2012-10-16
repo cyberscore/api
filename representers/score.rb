@@ -1,9 +1,13 @@
-module ScoreRepresenter
-  include Roar::Representer::JSON::HAL
+module Cyberscore::Representer
 
-  property :cs_points
-  property :chart_pos
-  property :submission
-  property :last_update
-  property :comment
+  module Score
+    include Roar::Representer::JSON::HAL
+
+    property :cs_points
+    property :chart_pos
+    property :submission
+    property :last_update
+    property :comment
+  end
+
 end

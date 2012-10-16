@@ -1,8 +1,12 @@
-module MedalsRepresenter
-  include Roar::Representer::JSON::HAL
+module Cyberscore::Representer
 
-  property :platinum
-  property :gold
-  property :silver
-  property :bronze
+  module Medals
+    include Roar::Representer::JSON::HAL
+
+    property :platinum
+    property :gold
+    property :silver
+    property :bronze
+  end
+
 end

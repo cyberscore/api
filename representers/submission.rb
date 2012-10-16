@@ -1,35 +1,40 @@
 require 'roar/representer/json'
 require 'roar/representer/json/hal'
 
-module SubmissionRepresenter
-  include Roar::Representer::JSON::HAL
+module Cyberscore::Representer::Submission
 
-  property :platinum
-  property :chart_pos, :from => :position
-  property :game
-  # property :group
-  # property :chart
-  property :submission
-  property :cs_points, :from => :csp
-  property :last_update
 
-  # property :user
+  module Item
+    include Roar::Representer::JSON::HAL
 
-  link :rel => :self  do "/api/submissions/#{level_id}" end
-  link :rel => :game  do "/api/games/#{game_id}"        end
-  link :rel => :index do "/api/submissions"             end
-end
+    property :platinum
+    property :chart_pos, :from => :position
+    property :game_name, :from => :game
+    property :group
+    property :chart
+    property :submission
+    property :csp
+    property :last_update, :from => :date
 
-module SubmissionCollection
-  include Roar::Representer::JSON::HAL
 
-  property :total
+    link :rel => :self      do "/submissions/#{level_id}" end
+    link :rel => :index     do "/submissions"             end
+    link :rel => "cs:game"  do "/games/#{game_id}"        end
+    link :rel => "cs:group" do "/games/#{game_id}/groups/#{level.group_id}"             end
+  end
 
-  collection :submissions,
-    :class => OpenStruct,
-    :extend => SubmissionRepresenter,
-    :embedded => true
+  module Collection
+    include Roar::Representer::JSON::HAL
 
-  link :rel => :self do "/api/submissions" end
-  link :rel => :up   do "/api" end
+    property :total
+
+    collection :submissions,
+      :class => OpenStruct,
+      :extend => Item,
+      :embedded => true
+
+    link :rel => :self do "/submissions" end
+    link :rel => :up   do "/" end
+  end
+
 end

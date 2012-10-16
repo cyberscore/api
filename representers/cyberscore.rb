@@ -1,12 +1,16 @@
-module CyberscoreRepresenter
-  include Roar::Representer::JSON::HAL
+module Cyberscore::Representer
 
-  property :user_count
-  property :motd
+  module Root
+    include Roar::Representer::JSON::HAL
 
-  link :self        do "http://cs-api.heroku.com/api" end
-  link :users       do "/api/users"       end
-  link :news        do "/api/news"        end
-  link :submissions do "/api/submissions" end
-  link :games       do "/api/games"       end
+    property :user_count
+    property :motd
+
+    link :self        do "http://cs-api.heroku.com/api" end
+    link :users       do "/users"       end
+    link :news        do "/news"        end
+    link :submissions do "/submissions" end
+    link :games       do "/games"       end
+  end
+
 end

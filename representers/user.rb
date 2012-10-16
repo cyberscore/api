@@ -3,53 +3,62 @@ require_relative 'submission'
 require_relative 'game'
 require_relative 'medals'
 
-module UserItem
-  include Roar::Representer::JSON::HAL
+module Cyberscore::Representer::User
 
-  property :user_id, :from => :id
-  property :forename
-  property :surname
-  property :username
-  property :date_lastseen, :from => :last_seen
-  property :website
+  module Item
+    extend  Cyberscore::Representer::Relations
+    include Roar::Representer::JSON::HAL
 
-  property :medals
+    property :user_id, :from => :id
+    property :forename
+    property :surname
+    property :username
+    property :date_lastseen, :from => :last_seen
+    property :website
 
-  collection :records,
-             :class    => OpenStruct,
-             :extend   => SubmissionRepresenter,
-             :embedded => true
+    property :medals,
+             :class  => OpenStruct,
+             :extend => Cyberscore::Representer::Medals
 
-  link :rel => :self        do "/api/users/#{username}"                              end
-  link :rel => :index       do "/api/users"                                          end
-  link :rel => :records     do "/api/users/#{username}/records"                      end
-  link :rel => :profile     do "http://cyberscore.me.uk/user/#{user_id}/stats"       end
-  link :rel => :dashboard   do "http://cyberscore.me.uk/dashboard.php?id=#{user_id}" end
-  link :rel => :rankbuttons do "/api/users/#{username}/rankbuttons"                  end
-  link :rel => :search,
-       :templated => true do "/api/users{?search}" end
-end
+    collection :records,
+               :class    => OpenStruct,
+               :extend   => Cyberscore::Representer::Submission::Item,
+               :embedded => true
 
-module UserCollection
-  include Roar::Representer::JSON::HAL
-
-  attr_accessor :newest
-
-  def initialize
-    @newest = User.order(:user_id).last(5)
+    link :self         do "/users/#{username}"         end
+    link :index        do "/users"                     end
+    link :"cs:records" do "/users/#{username}/records" end
+    link :rel  => :profile,
+         :type => 'text/html' do "http://cyberscore.me.uk/user/#{user_id}/stats"       end
+    link :rel  => :"cs:dashboard",
+         :type => 'text/html' do "http://cyberscore.me.uk/dashboard.php?id=#{user_id}" end
+    link :rel => :"cs:rankbuttons" do "/users/#{username}/rankbuttons" end
+    link :rel => :search,
+         :templated => true   do "/users{?search}" end
   end
 
-  property :users_count, :from => :users
+  module Collection
+    include Roar::Representer::JSON::HAL
 
-  # collection :users,
-  #            :class => OpenStruct,
-  #            :extend => UserItem,
-  #            :embedded => true
+    attr_accessor :newest
 
-  link :self  do "/api/users"          end
-  link :first do "/api/users/#{first}" end
-  link :last  do "/api/users/#{last}"  end
-  link :up    do "/api"                end
-  link :rel => :search,
-       :templated => true do "/api/users{?username,id}" end
+    def initialize
+      @newest = User.order(:user_id).last(5)
+    end
+
+    property :users_count, :from => :users
+
+    collection :users,
+               :class => OpenStruct,
+               :extend => Item,
+               :embedded => true
+
+    link :self  do "/users"          end
+    link :first do "/users/#{first}" end
+    link :last  do "/users/#{last}"  end
+    link :up    do ""                end
+    link :rel => :search,
+         :templated => true do "/users{?username,id}" end
+  end
+
 end
