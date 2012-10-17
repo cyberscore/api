@@ -1,5 +1,7 @@
 source :rubygems
 
+gem "puma"
+
 gem "sinatra", :require => "sinatra/base"
 #gem "sinatra-contrib"
 gem "sinatra-sequel"

@@ -16,6 +16,8 @@ GEM
     pry-remote (0.1.6)
       pry (~> 0.9)
       slop (~> 3.0)
+    puma (1.6.3)
+      rack (~> 1.2)
     rack (1.4.1)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -61,6 +63,7 @@ DEPENDENCIES
   mysql
   pry
   pry-remote
+  puma
   rack
   rack-cache
   rack-contrib
