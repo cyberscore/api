@@ -101,10 +101,6 @@ module Cyberscore
 
       news = Model::News.order(:news_id.desc).limit(limit, offset)
 
-      news.each do |it|
-        it.news_text = escape_html(it.news_text)
-      end
-
       collection       = OpenStruct.new.extend(Representer::News::Collection)
       collection.date  = Date.today.to_s
       collection.first = news.reverse.first.news_id
