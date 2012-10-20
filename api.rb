@@ -85,12 +85,12 @@ module Cyberscore
       user = Model::User.find(:username => params['name'])
       limit = params['limit'].nil? ? 10 : params['limit'].to_i
 
-      coll = OpenStruct.new.extend(Representer::Subsbmission::Collection)
-      coll.total       = user.records.count
-      coll.submissions = params.key?('all') ?
+      collection = OpenStruct.new.extend(Representer::Submission::Collection)
+      collection.total       = user.records.count
+      collection.submissions = params.key?('all') ?
         user.records : user.records.first(limit)
 
-      coll.to_json
+      collection.to_json
     end
 
     get '/news' do
