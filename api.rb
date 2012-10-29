@@ -3,11 +3,11 @@ require 'sinatra/base'
 require 'sinatra/sequel'
 require 'sinatra/jsonp'
 
+require_relative 'routes'
+
 require 'json'
 
-require 'open-uri'
 require 'ostruct'
-require 'nokogiri'
 
 module Cyberscore
   class API < Sinatra::Base
@@ -47,51 +47,6 @@ module Cyberscore
       send_file 'public/hal_browser.html'
     end
 
-
-    get '/users' do
-      if params['username']
-        username = params.delete 'username'
-        url = "/users/#{username}"
-
-        redirect to("/users/#{username}")
-      end
-
-      users = Model::User.order(:user_id.desc).first(5)
-
-      collection = OpenStruct.new.extend(Representer::User::Collection)
-      collection.users_count = Model::User.count
-      collection.first       = users.reverse.first.username
-      collection.last        = users.reverse.last.username
-      collection.users       = users
-
-      collection.to_json
-    end
-    get '/users/:name' do
-      if params['name'].match(/\A\d+\z/)
-        user = Model::User.find(:user_id => params['name'])
-      else
-        user = Model::User.find(:username => params['name'])
-      end
-
-      return {error: 'no user found'}.to_json if user.nil?
-
-      collection = OpenStruct.new(user).extend(Representer::User::Item)
-      collection.records = user.records.reverse.first(10)
-      collection.medals  = user.medals
-
-      collection.to_json
-    end
-    get '/users/:name/records' do
-      user = Model::User.find(:username => params['name'])
-      limit = params['limit'].nil? ? 10 : params['limit'].to_i
-
-      collection = OpenStruct.new.extend(Representer::Submission::Collection)
-      collection.total       = user.records.count
-      collection.submissions = params.key?('all') ?
-        user.records : user.records.first(limit)
-
-      collection.to_json
-    end
 
     get '/news' do
       redirect to("news/"+params["id"]) if params['id']
@@ -135,7 +90,8 @@ module Cyberscore
       collection.to_json
     end
     get '/games/:id' do
-      Model::Game.find(:game_id => params[:id]).extend(Representer::Game::Item).to_json
+      Model::Game.find(:game_id => params[:id]) \
+        .extend(Representer::Game::Item).to_json
     end
 
   end

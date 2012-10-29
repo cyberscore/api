@@ -3,7 +3,6 @@ require 'roar/representer/json/hal'
 
 module Cyberscore::Representer::Submission
 
-
   module Item
     include Roar::Representer::JSON::HAL
 
@@ -17,10 +16,10 @@ module Cyberscore::Representer::Submission
     property :last_update, :from => :date
 
 
-    link :rel => :self      do "/submissions/#{level_id}" end
-    link :rel => :index     do "/submissions"             end
-    link :rel => "cs:game"  do "/games/#{game_id}"        end
-    link :rel => "cs:group" do "/games/#{game_id}/groups/#{level.group_id}"             end
+    link :self       do "/submissions/#{level_id}" end
+    link :index      do "/submissions"             end
+    link :"cs:game"  do "/games/#{game_id}"        end
+    link :"cs:group" do "/games/#{game_id}/groups/#{level.group_id}" end
   end
 
   module Collection

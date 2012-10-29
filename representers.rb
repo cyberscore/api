@@ -9,7 +9,7 @@ module Cyberscore::Representer
 
     link rel:     :curie,
          name:       :cs,
-         templated: true do "http://cs-rels.heroku.com/{rel}" end
+         templated: true do "/rels/{rel}" end
   end
 
 end
