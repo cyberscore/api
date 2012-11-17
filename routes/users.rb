@@ -19,10 +19,10 @@ module Cyberscore
     end
 
     get '/users/:name' do
-      if params['name'].match(/\A\d+\z/)
-        user = Model::User.find(:user_id => params['name'])
+      user = if params['name'].match(/\A\d+\z/)
+        Model::User.find(:user_id => params['name'])
       else
-        user = Model::User.find(:username => params['name'])
+        Model::User.find(:username => params['name'])
       end
 
       return {error: 'no user found'}.to_json if user.nil?
