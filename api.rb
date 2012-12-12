@@ -3,6 +3,7 @@ require 'sinatra/base'
 require 'sinatra/sequel'
 require 'sinatra/jsonp'
 
+require 'better_errors'
 
 require 'json'
 
@@ -13,6 +14,9 @@ module Cyberscore
     helpers Sinatra::Jsonp
 
     configure do
+      use BetterErrors::Middleware
+      BetterErrors.application_root = File.expand_path("..", __FILE__)
+
       set :raise_errors, true
       set :show_exceptions, true
 

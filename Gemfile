@@ -11,6 +11,9 @@ gem "mysql"
 gem "roar"
 gem "andand"
 
+gem "better_errors"
+gem "binding_of_caller"
+
 gem "rack"
 gem "rack-jsonp"
 gem "rack-contrib"
