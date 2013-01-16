@@ -1,5 +1,6 @@
 # -*- encoding: UTF-8 -*-
 require 'sinatra/base'
+require 'sinatra/namespace'
 require 'sinatra/sequel'
 require 'sinatra/jsonp'
 
@@ -11,11 +12,36 @@ require 'ostruct'
 
 module Cyberscore
   class API < Sinatra::Base
+    register Sinatra::Namespace
     helpers Sinatra::Jsonp
+
+    helpers do
+      def protected!
+        binding.pry_remote
+
+        return if authorized?
+
+        response['WWW-Authenticate'] = %(Basic real="Restricted Area")
+        throw(:halt, [401, "Not authorized\n"])
+      end
+
+      def authorized?
+        @auth ||= Rack::Auth::Basic::Request.new(request.env)
+        @auth.provided? && @auth.basic? && user_login_correct?
+      end
+
+      def user_login_correct?
+        return false if @auth.credentials.all? {|it| it.empty? }
+
+        user = Model::User.find(:username => @auth.username)
+        user.pword == Digest::MD5.hexdigest(@auth.credentials.last)
+      end
+    end
 
     configure do
       use BetterErrors::Middleware
       BetterErrors.application_root = File.expand_path("..", __FILE__)
+      BetterErrors.logger           = Logger.new $stdout
 
       set :raise_errors, true
       set :show_exceptions, true
@@ -28,7 +54,7 @@ module Cyberscore
       require_relative 'representers'
       require_relative 'routes'
 
-      mime_type :hal, 'application/hal+json'
+      # mime_type :hal, 'application/hal+json'
     end
 
     before do
@@ -49,32 +75,6 @@ module Cyberscore
       content_type :html
 
       send_file 'public/hal_browser.html'
-    end
-
-    get '/submissions' do
-      user = Model::User.find(:username => 'locks')
-
-      subs = user.records.first(10)
-
-      collection             = OpenStruct.new.extend(Representer::Submission::Collection)
-      collection.total       = subs.size
-      collection.submissions = subs
-
-      collection.to_json
-    end
-
-    get '/games' do
-      games = Model::Game.order(:game_id.desc).first(5)
-
-      collection = OpenStruct.new.extend(Representer::Game::Collection)
-      collection.total = Model::Game.count
-      collection.games = games
-
-      collection.to_json
-    end
-    get '/games/:id' do
-      Model::Game.find(:game_id => params[:id]) \
-        .extend(Representer::Game::Item).to_json
     end
 
   end

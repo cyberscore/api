@@ -18,6 +18,7 @@ module Cyberscore::Representer::Game
     link :index do "http://cyberscore.me.uk/games"           end
     link :rel => :search,
          :templated => true do "http://cyberscore.me.uk/games{?platform,name}" end
+    link :proof do "#{proof_link}" end
   end
 
   module Collection

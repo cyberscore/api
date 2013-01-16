@@ -5,6 +5,18 @@ require_relative 'medals'
 
 module Cyberscore::Representer::User
 
+  module Game
+    include Roar::Representer::JSON::HAL
+
+    property :game_name, from: :name
+    property :submissions
+    property :medals,
+             :class  => OpenStruct,
+             :extend => Cyberscore::Representer::Medals
+
+    link :self do "/games/#{game_id}" end
+  end
+
   module Item
     extend  Cyberscore::Representer::Relations
     include Roar::Representer::JSON::HAL

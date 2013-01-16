@@ -22,6 +22,17 @@ module Cyberscore::Model
         medals.gold, medals.silver, medals.bronze = top_3.fill 0, top_3.length...3
       end
     end
+
+    def games
+      records.first.game
+    end
+
+    def proofs
+      Record.where([user_id: self.pk],
+                   [rec_status: 3],
+                   ['linked_proof != ""'])
+            .where('rec_status', 3)
+    end
   end
 
 end
