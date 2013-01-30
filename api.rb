@@ -2,7 +2,6 @@
 require 'sinatra/base'
 require 'sinatra/namespace'
 require 'sinatra/sequel'
-require 'sinatra/jsonp'
 
 require 'better_errors'
 
@@ -13,12 +12,9 @@ require 'ostruct'
 module Cyberscore
   class API < Sinatra::Base
     register Sinatra::Namespace
-    helpers Sinatra::Jsonp
 
     helpers do
       def protected!
-        binding.pry_remote
-
         return if authorized?
 
         response['WWW-Authenticate'] = %(Basic real="Restricted Area")

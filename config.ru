@@ -1,8 +1,6 @@
 require 'bundler/setup'
 
 require 'rack'
-require 'rack/contrib'
-require 'rack/cache'
 require 'rack/cors'
 
 require './api'
@@ -17,7 +15,6 @@ use Rack::Cors do |config|
   end
 end
 use Rack::Deflater
-use Rack::JSONP
 use Rack::ShowExceptions
 
 
