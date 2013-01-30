@@ -37,9 +37,10 @@ module Cyberscore::Representer::User
                :extend   => Cyberscore::Representer::Submission::Item,
                :embedded => true
 
-    link :self         do "/users/#{username}"         end
-    link :index        do "/users"                     end
-    link :"cs:records" do "/users/#{username}/records" end
+    link :self               do "/users/#{username}"               end
+    link :index              do "/users"                           end
+    link :"cs:records"       do "/users/#{username}/records"       end
+    link :"cs:notifications" do "/users/#{username}/notifications" end
     link :rel  => :profile, :type => 'text/html' do
       "http://cyberscore.me.uk/user/#{user_id}/stats"
     end
