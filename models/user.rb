@@ -1,9 +1,11 @@
 require_relative 'record'
+require_relative 'notification'
 
 module Cyberscore::Model
 
   class User < Sequel::Model
     one_to_many :records
+    one_to_many :notification
 
     def newest_records(this_much=10)
       @newest_records ||= records.reverse.first this_much
