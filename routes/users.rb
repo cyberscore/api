@@ -41,7 +41,21 @@ module Cyberscore
       get '/records/:record' do
         record = Record[param[:record]]
 
-        collection = OpenStruct.extend(Representer::Submission::Item)
+        collection = OpenStruct.new.extend(Representer::Submission::Item)
+      end
+
+      get '/notifications' do
+        collection = OpenStruct.new.extend(Representer::Notification::Collection)
+        collection.notifications = @user.notification
+        collection.total         = @user.notification.count
+        collection.unread        = @user.notification.select {|note| note.note_seen.eql? 'n'}.count
+        collection.username      = @user.username
+
+        collection.to_json
+      end
+      get '/notifications/:notification' do
+      end
+      post '/notificatiosn/:notification' do
       end
 
     end
