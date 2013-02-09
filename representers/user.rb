@@ -2,6 +2,7 @@ require_relative 'score'
 require_relative 'submission'
 require_relative 'game'
 require_relative 'medals'
+require_relative 'notification'
 
 module Cyberscore::Representer::User
 
@@ -32,9 +33,41 @@ module Cyberscore::Representer::User
              :class  => OpenStruct,
              :extend => Cyberscore::Representer::Medals
 
-    collection :newest_records,
+    # collection :newest_records,
+    #            :class    => OpenStruct,
+    #            :extend   => Cyberscore::Representer::Submission::Item,
+    #            :embedded => true
+
+    link :self               do "/users/#{username}"               end
+    link :index              do "/users"                           end
+    link :"cs:records"       do "/users/#{username}/records"       end
+    link :rel  => :profile, :type => 'text/html' do
+      "http://cyberscore.me.uk/user/#{user_id}/stats"
+    end
+    link :rel  => :"cs:dashboard", :type => 'text/html' do
+      "http://cyberscore.me.uk/dashboard.php?id=#{user_id}"
+    end
+  end
+
+  module AuthorizedItem
+    include Roar::Representer::JSON::HAL
+
+    property :user_id, :from => :id
+    property :forename
+    property :surname
+    property :username
+    property :date_lastseen, :from => :last_seen
+    property :website
+
+    property :medals,
+             :class  => OpenStruct,
+             :extend => Cyberscore::Representer::Medals
+
+
+    collection :notification,
+               :from     => :notifications,
                :class    => OpenStruct,
-               :extend   => Cyberscore::Representer::Submission::Item,
+               :extend   => Cyberscore::Representer::Notification::Item,
                :embedded => true
 
     link :self               do "/users/#{username}"               end
@@ -50,6 +83,7 @@ module Cyberscore::Representer::User
     link :rel => :search, :templated => true do
       "/users{?search}"
     end
+
   end
 
   module Collection
