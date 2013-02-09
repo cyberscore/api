@@ -5,8 +5,6 @@ require 'rack/cors'
 
 require './api'
 
-require 'pry-remote'
-
 
 use Rack::Cors do |config|
   config.allow do |allow|

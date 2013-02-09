@@ -3,8 +3,6 @@ require 'sinatra/base'
 require 'sinatra/namespace'
 require 'sinatra/sequel'
 
-require 'better_errors'
-
 require 'json'
 
 require 'ostruct'
@@ -35,13 +33,6 @@ module Cyberscore
     end
 
     configure do
-      use BetterErrors::Middleware
-      BetterErrors.application_root = File.expand_path("..", __FILE__)
-      BetterErrors.logger           = Logger.new $stdout
-
-      set :raise_errors, true
-      set :show_exceptions, true
-
       Sequel::Model.db = Sequel.connect ENV['CS4_MYSQL']
       Sequel::Model.db.convert_invalid_date_time = nil
       Sequel::Model.plugin :force_encoding, 'UTF-8'
