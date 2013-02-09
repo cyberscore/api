@@ -14,6 +14,8 @@ module Cyberscore::Representer::Notification
 
     link :self  do "/users/#{user.username}/notifications/#{notification_id}" end
     link :index do "/users/#{user.username}/notifications"       end
+    link :"cs:game"  do "http://cyberscore.me.uk/game/#{game_id}"   end
+    link :"cs:chart" do "http://cyberscore.me.uk/chart/#{chart_id}" end
   end
 
   module Collection
