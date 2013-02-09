@@ -1,4 +1,23 @@
 module Cyberscore
+  module Error
+    class UserNotFound
+      attr_accessor :username, :request_path
+
+      def initialize(request_path, username)
+        @request_path = request_path
+        @username     = username
+      end
+
+      def status
+        404
+      end
+
+      def description
+        "User #{username} not found"
+      end
+    end
+  end
+
   class API < Sinatra::Base
 
     get '/users' do
@@ -13,7 +32,21 @@ module Cyberscore
 
     namespace '/users/:name' do
       before do
-        @user = Model::User.find(:username => params['name'])
+        @name = params['name']
+
+        @user = Model::User.find(:username => @name)
+
+        # if @user.nil?
+        #   halt 404, Error::UserNotFound.new(request.url, @name).extend(Representer::Error).to_json
+        # end
+        #
+        # if authorized?
+        #   @user.extend(Representer::User::AuthorizedItem)
+        # else
+        #   @user.extend(Representer::User::Item)
+        # end
+
+        @user.extend(Representer::User::Item)
       end
 
       after do
@@ -21,9 +54,7 @@ module Cyberscore
 
       # api/users/:name
       get '' do
-        return {error: 'no user found'}.to_json if @user.nil?
-
-        @user.extend(Representer::User::Item).to_json
+        @user.to_json
       end
 
       get '/records' do
@@ -45,6 +76,8 @@ module Cyberscore
       end
 
       get '/notifications' do
+        protected!
+
         collection = OpenStruct.new.extend(Representer::Notification::Collection)
         collection.notifications = @user.notification
         collection.total         = @user.notification.count
@@ -53,7 +86,11 @@ module Cyberscore
 
         collection.to_json
       end
+
       get '/notifications/:notification' do
+        notification = Model::Notification.find(params[:notification])
+
+        notification.extend(Representer::Notification::Item).to_json
       end
       post '/notificatiosn/:notification' do
       end
