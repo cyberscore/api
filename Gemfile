@@ -13,6 +13,8 @@ gem "sequel"
 gem "mysql"
 gem "roar", "0.11.8"
 
+gem "analytics-ruby"
+
 group :development do
   gem "pry"
   gem "pry-remote"

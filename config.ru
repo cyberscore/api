@@ -6,6 +6,7 @@ require 'rack/cors'
 require './api'
 
 
+
 use Rack::Cors do |config|
   config.allow do |allow|
     allow.origins '*'

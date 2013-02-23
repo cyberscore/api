@@ -7,6 +7,9 @@ require 'json'
 
 require 'ostruct'
 
+require 'analytics-ruby'
+
+
 module Cyberscore
   class API < Sinatra::Base
     register Sinatra::Namespace
@@ -42,6 +45,18 @@ module Cyberscore
       require_relative 'routes'
 
       # mime_type :hal, 'application/hal+json'
+
+      Analytics.init(secret: '1746nkwcraydmdhg88z4')
+
+      Analytics.identify(
+        user_id: '019mr8mf4r',
+        traits: {
+          name: 'Ricardo Mendes',
+          email: 'rokusu@gmail.com',
+          subscription_plan: 'Premium',
+          friend_count: 29
+        }
+      )
     end
 
     before do
@@ -52,6 +67,11 @@ module Cyberscore
 
 
     get '/' do
+      Analytics.track(
+        user_id: '019mr8mf4r',
+        event:   'Entered API'
+      )
+
       resp = OpenStruct.new.extend(Representer::Root)
       resp.motd = "Hello there! API still in progress :)"
 
