@@ -24,5 +24,4 @@ end
 group :testing do
   gem "pry"
   gem "pry-remote"
-  gem "pry-debugger"
 end
