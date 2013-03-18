@@ -7,6 +7,8 @@ module Cyberscore::Model
     many_to_one :user
     many_to_one :level, key: :chart_id
 
+    def_column_alias :id, :notification_id
+
     def username
       user.username
     end
@@ -26,7 +28,7 @@ module Cyberscore::Model
     def game_id
       level.game.game_id
     end
-    
+
 
     def chart
       level.name

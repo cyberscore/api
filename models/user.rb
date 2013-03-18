@@ -7,6 +7,8 @@ module Cyberscore::Model
     one_to_many :records
     one_to_many :notification
 
+    def_column_alias :id, :user_id
+
     def newest_records(this_much=10)
       @newest_records ||= records.reverse.first this_much
     end
