@@ -4,16 +4,13 @@ require 'sinatra/namespace'
 require 'sinatra/sequel'
 
 require 'json'
-
 require 'ostruct'
-
 require 'analytics-ruby'
 
 
 module Cyberscore
   class API < Sinatra::Base
     register Sinatra::Namespace
-
     helpers do
       def protected!
         return if authorized?
@@ -35,16 +32,12 @@ module Cyberscore
       end
     end
 
-    configure do
+    configure :development do
+      require 'pry-remote';
+      Sequel::Model.db = Sequel.connect ENV['CS4_DB_DEV']
+    end
+    configure :production do
       Sequel::Model.db = Sequel.connect ENV['CS4_MYSQL']
-      Sequel::Model.db.convert_invalid_date_time = nil
-      Sequel::Model.plugin :force_encoding, 'UTF-8'
-
-      require_relative 'models'
-      require_relative 'representers'
-      require_relative 'routes'
-
-      # mime_type :hal, 'application/hal+json'
 
       Analytics.init(secret: '1746nkwcraydmdhg88z4')
 
@@ -58,13 +51,20 @@ module Cyberscore
         }
       )
     end
+    configure do
+      Sequel::Model.db.convert_invalid_date_time = nil
+      Sequel::Model.plugin :force_encoding, 'UTF-8'
+
+      require_relative 'models'
+      require_relative 'representers'
+      require_relative 'routes'
+    end
 
     before do
       cache_control :public, :max_age => 36000
       content_type :json# if request.accept.include? "json"
       # content_type :hal if request.accept.include? "application/hal+json"
     end
-
 
     get '/' do
       Analytics.track(
@@ -83,6 +83,5 @@ module Cyberscore
 
       send_file 'public/hal_browser.html'
     end
-
   end
 end
