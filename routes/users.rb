@@ -77,7 +77,7 @@ module Cyberscore
 
       get '/notifications' do
         protected!
-
+        
         collection = OpenStruct.new.extend(Representer::Notification::Collection)
         collection.notifications = @user.notification
         collection.total         = @user.notification.count
@@ -88,11 +88,44 @@ module Cyberscore
       end
 
       get '/notifications/:notification' do
-        notification = Model::Notification.find(params[:notification])
+        id = params[:notification].to_i
+        
+        notification = Model::Notification[id]
 
         notification.extend(Representer::Notification::Item).to_json
       end
-      post '/notificatiosn/:notification' do
+
+      post '/notifications/:notification' do
+        id = params[:notification].to_i
+        n  = Model::Notification[id]
+        
+        if n.nil?
+          status 404
+          
+          return
+        end
+        
+        if @user.id != n.user_id
+          status 401
+          return
+        end
+        
+        if params[:unread].nil?
+          status 400
+          body JSON.dump({ message: "Parameter 'unread' is missing" })
+          
+          return
+        end
+
+        if params[:unread].eql? "true"
+          n[:note_seen] = 'n'
+        elsif params[:unread].eql? "false"
+          n[:note_seen] = 'y'
+        end
+        
+        n.save
+
+        Model::Notification[id].extend(Representer::Notification::Item).to_json
       end
 
     end
