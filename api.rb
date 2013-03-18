@@ -38,18 +38,6 @@ module Cyberscore
     end
     configure :production do
       Sequel::Model.db = Sequel.connect ENV['CS4_MYSQL']
-
-      Analytics.init(secret: '1746nkwcraydmdhg88z4')
-
-      Analytics.identify(
-        user_id: '019mr8mf4r',
-        traits: {
-          name: 'Ricardo Mendes',
-          email: 'rokusu@gmail.com',
-          subscription_plan: 'Premium',
-          friend_count: 29
-        }
-      )
     end
     configure do
       Sequel::Model.db.convert_invalid_date_time = nil
