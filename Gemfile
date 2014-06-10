@@ -15,8 +15,6 @@ gem "sequel"
 gem "mysql"
 gem "roar", "0.12.7"
 
-gem "analytics-ruby"
-
 group :development do
   gem "better_errors", "0.3.2"
 end
