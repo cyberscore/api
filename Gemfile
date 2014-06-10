@@ -1,5 +1,7 @@
 source "https://rubygems.org"
 
+gem "rake"
+
 gem "puma"
 
 gem "rack"
@@ -11,7 +13,7 @@ gem "sinatra-sequel"
 
 gem "sequel"
 gem "mysql"
-gem "roar", "0.11.8"
+gem "roar", "0.12.7"
 
 gem "analytics-ruby"
 
