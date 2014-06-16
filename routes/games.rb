@@ -2,7 +2,7 @@ module Cyberscore
   class API < Sinatra::Base
 
     get '/games' do
-      games = Model::Game.order(:game_id.desc).first(5)
+      games = Model::Game.reverse_order(:game_id).first(5)
 
       collection = OpenStruct.new.extend(Representer::Game::Collection)
       collection.total = Model::Game.count

@@ -21,11 +21,11 @@ module Cyberscore
   class API < Sinatra::Base
 
     get '/users' do
-      users = Model::User.order(:user_id.desc).first(5)
+      users = Model::User.reverse_order(:user_id).first(5)
 
       collection = OpenStruct.new.extend(Representer::User::Collection)
       collection.users_count = Model::User.count
-      collection.users       = Model::User.order(:user_id.desc).first(5)
+      collection.users       = Model::User.reverse_order(:user_id).first(5)
 
       collection.to_json
     end

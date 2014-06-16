@@ -7,7 +7,7 @@ module Cyberscore
       params['news'] and limit = params['news'].to_i or limit = 10
       offset = params['page'].to_i * limit
 
-      news = Model::News.order(:news_id.desc).limit(limit, offset)
+      news = Model::News.reverse_order(:news_id).limit(limit, offset)
 
       collection       = OpenStruct.new.extend(Representer::News::Collection)
       collection.date  = Date.today.to_s
