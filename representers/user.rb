@@ -9,7 +9,7 @@ module Cyberscore::Representer::User
   module Game
     include Roar::Representer::JSON::HAL
 
-    property :game_name, from: :name
+    property :game_name, as: :name
     property :submissions
     property :medals,
              :class  => OpenStruct,
@@ -22,11 +22,11 @@ module Cyberscore::Representer::User
     extend  Cyberscore::Representer::Relations
     include Roar::Representer::JSON::HAL
 
-    property :user_id, :from => :id
+    property :user_id, :as => :id
     property :forename
     property :surname
     property :username
-    property :date_lastseen, :from => :last_seen
+    property :date_lastseen, :as => :lastSeen
     property :website
 
     property :medals,
@@ -52,11 +52,11 @@ module Cyberscore::Representer::User
   module AuthorizedItem
     include Roar::Representer::JSON::HAL
 
-    property :user_id, :from => :id
+    property :user_id, :as => :id
     property :forename
     property :surname
     property :username
-    property :date_lastseen, :from => :last_seen
+    property :date_lastseen, :as => :lastSeen
     property :website
 
     property :medals,
@@ -65,7 +65,7 @@ module Cyberscore::Representer::User
 
 
     collection :notification,
-               :from     => :notifications,
+               :as       => :notifications,
                :class    => OpenStruct,
                :extend   => Cyberscore::Representer::Notification::Item,
                :embedded => true
@@ -95,7 +95,7 @@ module Cyberscore::Representer::User
       @newest = Cyberscore::Model::User.order(:user_id).last(5)
     end
 
-    property :users_count, :from => :users
+    property :users_count, :as => :users
 
     collection :users,
                :class => OpenStruct,

@@ -6,10 +6,10 @@ module Cyberscore::Representer::News
   module Item
     include Roar::Representer::JSON::HAL
 
-    property :news_id,   :from => :id
+    property :news_id,   :as => :id
     property :headline
-    property :news_date, :from => :date
-    property :news_text, :from => :content
+    property :news_date, :as => :date
+    property :news_text, :as => :content
 
     link :self  do "/news/#{news_id}" end
     link :index do "/news"            end

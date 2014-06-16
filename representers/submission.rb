@@ -6,10 +6,10 @@ module Cyberscore::Representer::Submission
   module Historic
     include Roar::Representer::JSON::HAL
 
-    property :update_type, from: :type
-    property :update_date, from: :date
+    property :update_type, as: :type
+    property :update_date, as: :date
     property :submission
-    property :chart_pos,   from: :position
+    property :chart_pos,   as: :position
   end
 
   module Item
@@ -17,13 +17,13 @@ module Cyberscore::Representer::Submission
 
     property :username
     property :platinum
-    property :chart_pos, :from => :position
-    property :game_name, :from => :game
+    property :chart_pos, :as => :position
+    property :game_name, :as => :game
     property :group
     property :chart
     property :submission
     property :csp
-    property :last_update, :from => :date
+    property :last_update, :as => :date
     property :proof
 
     collection :history,

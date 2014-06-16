@@ -6,13 +6,13 @@ module Cyberscore::Representer::Game
   module Item
     include Roar::Representer::JSON::HAL
 
-    property :game_id, :from => :id
-    property :game_name, :from => :name
-    property :game_tag, :from => :tag
+    property :game_id, :as => :id
+    property :game_name, :as => :name
+    property :game_tag, :as => :tag
     property :description
     property :developer
-    property :total_charts, :from => :charts
-    property :total_subs, :from => :submissions
+    property :total_charts, :as => :charts
+    property :total_subs, :as => :submissions
 
     link :self  do "http://cyberscore.me.uk/game/#{game_id}" end
     link :index do "http://cyberscore.me.uk/games"           end
